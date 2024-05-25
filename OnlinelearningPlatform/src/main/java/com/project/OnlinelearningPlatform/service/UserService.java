@@ -8,12 +8,12 @@ import com.project.OnlinelearningPlatform.model.UserDetails;
 public interface UserService {
 
 	public List<UserDetails> getAllUsers();
-	
+
 	public Optional<UserDetails> getUserById(Long id);
-			
-	public void deleteUserById(Long id);
+
+	public String deleteUserById(Long id);
 
 	public void saveUser(UserDetails user);
 
-	void updateUserById(UserDetails user);
+	public void updateUserById(Long id, UserDetails user);
 }
