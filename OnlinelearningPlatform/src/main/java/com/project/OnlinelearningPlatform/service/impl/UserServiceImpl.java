@@ -28,20 +28,30 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void saveUser(UserDetails user) {
-         userRepo.save(user);		
+		userRepo.save(user);
 	}
 
 	@Override
-	public void updateUserById(UserDetails user) {
-        userRepo.save(user);		
+	public void updateUserById(Long id, UserDetails user) {
+		Optional<UserDetails> existingUser = userRepo.findById(id);
+		if (existingUser.isPresent()) {
+			UserDetails existingUseropt = existingUser.get();
+			existingUseropt.setEmail(null);
+			existingUseropt.setPassword(null);
+			existingUseropt.setPhoneNumber(id);
+			existingUseropt.setUserName(null);
+		}
+			
 	}
 
 	@Override
-	public void deleteUserById(Long id) {
-		userRepo.deleteById(id);
+	public String deleteUserById(Long id) {
+		Optional<UserDetails> user = userRepo.findById(id);
+		if (user.isPresent()) {
+			userRepo.deleteById(id);
+			return "user has been deleted";
+		} else
+			return "User not found";
 	}
 
-	
-	
-	
 }
