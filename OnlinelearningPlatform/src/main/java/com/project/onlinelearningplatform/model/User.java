@@ -1,4 +1,9 @@
-package com.project.OnlinelearningPlatform.model;
+package com.project.onlinelearningplatform.model;
+
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,10 +17,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(name = "userDetails")
+@Table(name = "user_details")
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDetails {
+public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE )
@@ -31,7 +36,5 @@ public class UserDetails {
     private String email;
     
     private Long phoneNumber;
-
-	
 
 }

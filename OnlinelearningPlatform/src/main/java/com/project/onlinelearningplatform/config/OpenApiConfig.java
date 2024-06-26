@@ -1,4 +1,4 @@
-package com.project.OnlinelearningPlatform.config;
+package com.project.onlinelearningplatform.config;
 
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ public class OpenApiConfig {
     @Bean
      GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("springshop-public")
+                .group("onlineLearningPlatform")
                 .pathsToMatch("/**")
                 .build();
     }
