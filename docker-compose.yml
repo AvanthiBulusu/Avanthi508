@@ -1,0 +1,141 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: olp-mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: OLP
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
+    networks:
+      - olp-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  configserver:
+    build:
+      context: ./OnlineLearningPlatformConfigServer
+      dockerfile: Dockerfile
+    container_name: onlinelearning-configserver
+    ports:
+      - "8888:8888"
+    networks:
+      - olp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  eurekaserver:
+    build:
+      context: ./OnlineLearningPlatformEurekaServer
+      dockerfile: Dockerfile
+    container_name: onlinelearning-eurekaserver
+    ports:
+      - "8761:8761"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://onlinelearning-configserver:8888/
+      - SPRING_PROFILES_ACTIVE=ED
+    networks:
+      - olp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  apigateway:
+    build:
+      context: ./OnlineLearningPlatformApiGatewayCb
+      dockerfile: Dockerfile
+    container_name: onlinelearning-apigateway
+    ports:
+      - "8085:8085"
+    depends_on:
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://onlinelearning-configserver:8888/
+      - SPRING_PROFILES_ACTIVE=OLPGD
+    networks:
+      - olp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  platform:
+    build:
+      context: ./OnlinelearningPlatform
+      dockerfile: Dockerfile
+    container_name: onlinelearning-platform
+    ports:
+      - "9000:9000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+      apigateway:
+        condition: service_healthy
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://onlinelearning-configserver:8888/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/OLP
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_PROFILES_ACTIVE=dp
+    networks:
+      - olp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  courses:
+    build:
+      context: ./OnlineLearningPlatformCourses
+      dockerfile: Dockerfile
+    container_name: onlinelearning-courses
+    depends_on:
+      configserver:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+      apigateway:
+        condition: service_healthy
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://onlinelearning-configserver:8888/
+      - SPRING_PROFILES_ACTIVE=OLPCD
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://onlinelearning-eurekaserver:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/Course
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    networks:
+      - olp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9001/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql-data:
+
+networks:
+  olp-network:
+    driver: bridge
