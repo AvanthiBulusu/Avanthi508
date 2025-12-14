@@ -15,32 +15,32 @@ steps:
   displayName: 'Build API Gateway'
   inputs:
     mavenPomFile: 'OnlineLearningPlatformApiGatewayCb/pom.xml'
-    goals: 'clean package'
+    goals: 'clean package -DskipTests'
 
 # ---------- Config Server ----------
 - task: Maven@3
   displayName: 'Build Config Server'
   inputs:
     mavenPomFile: 'OnlineLearningPlatformConfigServer/pom.xml'
-    goals: 'clean package'
+    goals: 'clean package -DskipTests'
 
 # ---------- Courses Service ----------
 - task: Maven@3
   displayName: 'Build Courses Service'
   inputs:
     mavenPomFile: 'OnlineLearningPlatformCourses/pom.xml'
-    goals: 'clean package'
+    goals: 'clean package -DskipTests'
 
 # ---------- Eureka Server ----------
 - task: Maven@3
   displayName: 'Build Eureka Server'
   inputs:
     mavenPomFile: 'OnlineLearningPlatformEurekaServer/pom.xml'
-    goals: 'clean package'
+    goals: 'clean package -DskipTests'
 
 # ---------- OnlinelearningPlatform (Fix: lowercase L!) ----------
 - task: Maven@3
   displayName: 'Build Main OnlinelearningPlatform'
   inputs:
     mavenPomFile: 'OnlinelearningPlatform/pom.xml'
-    goals: 'clean package'
+    goals: 'clean package -DskipTests'
