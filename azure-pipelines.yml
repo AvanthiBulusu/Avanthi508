@@ -44,3 +44,18 @@ steps:
   inputs:
     mavenPomFile: 'OnlinelearningPlatform/pom.xml'
     goals: 'clean package -DskipTests'
+
+# ---------- Copy all JAR files ----------
+- task: CopyFiles@2
+  displayName: 'Copy JAR files to staging directory'
+  inputs:
+    Contents: '**/target/*.jar'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# ---------- Publish JAR artifacts ----------
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish JAR artifacts'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'jarfiles'
+    publishLocation: 'Container'
