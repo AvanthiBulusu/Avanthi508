@@ -1,0 +1,18 @@
+type Order {
+    id: ID
+    userId: String
+    amount: Float
+    status: String
+}
+
+type Query {
+    getOrderById(id: ID): Order
+    getOrdersByUserId(userId: String): [Order]
+    getAllOrders: [Order]
+}
+
+type Mutation {
+    createOrder(id: ID, userId: String, amount: Float, status: String): Order
+    updateOrderById(id: ID, amount: Float): Order
+    deleteOrderById(id: ID): String
+}

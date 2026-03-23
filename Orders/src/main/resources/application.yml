@@ -1,0 +1,25 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: order-service
+  
+  couchbase:
+    connection-string: couchbase://127.0.0.1
+    username: Administrator
+    password: Admin@5555
+
+  data:
+    couchbase:
+      bucket-name: orders-bucket
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  graphql:
+    graphiql:
+      enabled: true
