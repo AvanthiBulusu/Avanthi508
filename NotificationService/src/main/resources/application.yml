@@ -1,0 +1,45 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: notification-service
+
+  couchbase:
+    connection-string: couchbase://127.0.0.1
+    username: Administrator
+    password: Admin@5555
+
+  data:
+    couchbase:
+      bucket-name: notification-bucket
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: avu.bulusu@gmail.com
+    password: hism bmef psyt wxew
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+mail:
+  from: avu.bulusu@gmail.com
+  to: avu.bulusu@gmail.com
+  subject: Order Notification
+  body:
+    application: Order-Service
+    environment: DEV
+    database: Couchbase
