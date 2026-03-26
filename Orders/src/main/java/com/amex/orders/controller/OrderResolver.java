@@ -5,10 +5,15 @@ import java.util.List;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import com.amex.orders.dto.AddressInput;
+import com.amex.orders.dto.OrderInput;
 import com.amex.orders.entity.Order;
+import com.amex.orders.entity.User;
 import com.amex.orders.service.OrderService;
+import com.amex.orders.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class OrderResolver {
 
 	public final OrderService orderService;
+
+	public final UserService userService;
 
 	// Get order by orderId
 	@QueryMapping
@@ -50,11 +57,32 @@ public class OrderResolver {
 		return orderService.saveOrder(order);
 	}
 
+	@MutationMapping
+	public Order createOrderWithUser(@Argument OrderInput input) {
+
+		User user = new User(input.getUser().getId(), input.getUser().getName(),
+				new AddressInput(input.getUser().getAddress().getStreet(), input.getUser().getAddress().getCity(),
+						input.getUser().getAddress().getZip()));
+
+		userService.save(user);
+
+		Order order = new Order(input.getId(), user.getId(), input.getAmount(), input.getStatus());
+
+		return orderService.saveOrder(order);
+	}
+
 	// update order by orderId
 	@MutationMapping
 	public Order updateOrderById(@Argument String id, @Argument double amount) {
 		Order order = orderService.getOrderById(id);
 		order.setAmount(amount);
 		return orderService.saveOrder(order);
+	}
+
+	// ---------------- NESTED RESOLVER ----------------
+
+	@SchemaMapping(typeName = "Order", field = "user")
+	public User getUser(Order order) {
+		return userService.getById(order.getUserId());
 	}
 }
