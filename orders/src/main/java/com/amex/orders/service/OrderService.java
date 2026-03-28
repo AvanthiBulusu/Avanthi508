@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.couchbase.core.CouchbaseTemplate;
 import org.springframework.stereotype.Service;
 
-import com.amex.orders.order.entity.Order;
+import com.amex.orders.entity.Order;
 
 import lombok.RequiredArgsConstructor;
 

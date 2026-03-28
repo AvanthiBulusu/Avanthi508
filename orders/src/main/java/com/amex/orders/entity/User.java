@@ -1,4 +1,4 @@
-package com.amex.orders.order.entity;
+package com.amex.orders.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.couchbase.core.mapping.Document;

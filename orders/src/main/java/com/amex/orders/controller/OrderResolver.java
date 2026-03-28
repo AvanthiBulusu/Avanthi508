@@ -9,9 +9,9 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import com.amex.orders.dto.OrderInput;
-import com.amex.orders.order.entity.Address;
-import com.amex.orders.order.entity.Order;
-import com.amex.orders.order.entity.User;
+import com.amex.orders.entity.Address;
+import com.amex.orders.entity.Order;
+import com.amex.orders.entity.User;
 import com.amex.orders.service.OrderService;
 import com.amex.orders.service.UserService;
 

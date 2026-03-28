@@ -1,4 +1,4 @@
-package com.amex.orders.order.entity;
+package com.amex.orders.entity;
 
 import lombok.*;
 
