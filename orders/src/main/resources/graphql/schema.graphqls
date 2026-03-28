@@ -1,0 +1,64 @@
+type Address {
+    street: String
+    city: String
+    zip: String
+}
+
+type User {
+    id: ID
+    name: String
+    address: Address
+}
+
+type Order {
+    id: ID
+    userId: String
+    amount: Float
+    status: String
+    user: User   # resolved via @SchemaMapping
+}
+
+# ---------- INPUTS ----------
+
+input AddressInput {
+    street: String
+    city: String
+    zip: String
+}
+
+input UserInput {
+    id: ID!
+    name: String
+    address: AddressInput
+}
+
+input CreateOrderWithUserInput {
+    id: ID!
+    amount: Float
+    status: String
+    user: UserInput
+}
+
+input OrderInput {
+    id: ID!
+    userId: String
+    amount: Float
+    status: String
+}
+
+# ---------- QUERY ----------
+
+type Query {
+    getOrderById(id: ID): Order
+    getOrdersByUserId(userId: String): [Order]
+    getAllOrders: [Order]
+}
+
+# ---------- MUTATION ----------
+
+type Mutation {
+    createOrder(order: OrderInput): Order
+    createOrderWithUser(input: CreateOrderWithUserInput): Order 
+    updateOrderById(id: ID, amount: Float): Order
+    deleteOrderById(id: ID): String
+}
